@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -63,9 +64,8 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        ListView lv = (ListView) findViewById(R.id.list_view);
-        EditText et = (EditText) findViewById(R.id.edit_text);
-        TextView tv = (TextView) findViewById(R.id.text_view);
+        ListView lv = findViewById(R.id.list_view);
+        EditText et = findViewById(R.id.edit_text);
         foodSearch.runIdSearch(et.getText().toString());
         try {
             Thread.sleep(1000);
@@ -74,6 +74,11 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
         }
 
         String data = foodSearch.getData();
+
+        if(data == null){
+            Toast.makeText(this,"The search was unsuccessful, try another one", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         String[] dataArr = data.split("\\r?\\n");
         Log.i("Hey", "The dataArr contents are" + dataArr);
