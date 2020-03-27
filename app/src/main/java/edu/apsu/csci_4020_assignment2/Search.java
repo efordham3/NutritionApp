@@ -22,18 +22,14 @@ import java.net.URL;
 public class Search {
     private Context context;
     private Uri.Builder builder;
-    private int id;
     private String data;
 
     public Search(){
         context = null;
     }
+
     public Search(Context current){
         this.context = current;//to access getResources()
-    }
-
-    public void setId(int num){
-        id = num;
     }
 
     public String getData(){
@@ -45,13 +41,23 @@ public class Search {
         builder.appendQueryParameter("generalSearchInput", userText);
         setIdBuilder();
         urlConnection();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return data;
     }
 
-    public String runDetailsSearch(){
+    public String runDetailsSearch(String id){
         setUrl("" + id);
         setDetailsBuilder();
         urlConnection();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return data;
     }
 
@@ -85,7 +91,8 @@ public class Search {
                     Log.i("Hey", "The result data is" + result);
                 }
                 else{
-                    detailsJsonParse();
+                    result = detailsJsonParse(jsonSearchData);
+                    Log.i("Hey", "The result data is " + result);
                 }
 
                 br.close();
@@ -97,6 +104,7 @@ public class Search {
                 e.printStackTrace();
             }
             data = result;
+            Log.i("Hey", "The data file was saved as " + data);
             return null;
         }
     }
@@ -107,7 +115,9 @@ public class Search {
     }
 
     //Override to adjust the builder for details search
-    private void setDetailsBuilder(){ }
+    private void setDetailsBuilder(){
+
+    }
 
     //Override to adjust the builder for id search
     private void setIdBuilder(){ }
@@ -123,9 +133,8 @@ public class Search {
                 Log.i("Hey", "The length of the JSON array is" + foods.length());
                 JSONObject food = foods.getJSONObject(i);
                 String id = Integer.toString((food.getInt("fdcId")));
-                String des = food.getString("description");
                 String brand = food.getString("brandOwner");
-                res += id + "-----" + des + "------" +  brand + "\n";
+                res += id + "--" +  brand + "\n";
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -135,6 +144,27 @@ public class Search {
     }
 
     //Override to adjust the json parsing for the food details search
-    private void detailsJsonParse() { }
+    private String detailsJsonParse(StringBuilder jsonData) {
+        double cal = 0;
+        try {
+            JSONObject reader = new JSONObject(jsonData.toString());
+            JSONArray nutrients = reader.getJSONArray("foodNutrients");
+            for(int i = 0; i < nutrients.length(); i++){
+                JSONObject nutrient = nutrients.getJSONObject(i);
+                JSONObject nutrientType = nutrient.getJSONObject("nutrient");
+                String type = nutrientType.getString("name");
+                if(type.equals("Energy")){
+                    cal = nutrient.getDouble("amount");
+                    break;
+                }
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+        return String.valueOf(cal);
+    }
 
 }
