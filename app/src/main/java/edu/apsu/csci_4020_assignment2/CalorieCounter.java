@@ -2,6 +2,7 @@ package edu.apsu.csci_4020_assignment2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +45,9 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
         Button searchButton = findViewById(R.id.search_button);
         ListView lv = findViewById(R.id.list_view);
 
+        Button button2 = findViewById(R.id.button2);
+        button2.setOnClickListener(this);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -74,6 +78,12 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
         }
 
         String data = foodSearch.getData();
+
+        if (view.getId() == R.id.button2) {
+
+            Intent i=new Intent(getApplicationContext(),IdSearch.class);
+            startActivity(i);
+        }
 
         String[] dataArr = data.split("\\r?\\n");
         Log.i("Hey", "The dataArr contents are" + dataArr);
