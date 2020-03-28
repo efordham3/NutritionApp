@@ -38,33 +38,31 @@ public class IdSearch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.id_search);
         EditText et = (EditText) findViewById(R.id.edit_text);
+        TextView st = (TextView) findViewById(R.id.textView3);
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText et = (EditText) findViewById(R.id.edit_text);
                 id = et.getText().toString();
-                doDownload();
+                dataDownload = new StackExchangeDownload();
+                dataDownload.execute();
             }
         });
     }
 
     private StackExchangeDownload dataDownload;
 
-    private void doDownload() {
-        if (dataDownload == null) {
-            dataDownload = new StackExchangeDownload();
-            dataDownload.execute();
-        }
-    }
-
 
     private class StackExchangeDownload extends AsyncTask<Void, Void, ResultData> {
         @Override
         protected ResultData doInBackground(Void... voids) {
             ResultData resultData = new ResultData();
+            TextView st = (TextView) findViewById(R.id.textView3);
 
             builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/" + id).buildUpon();
             builder.appendQueryParameter("api_key", IdSearch.this.getResources().getString(R.string.api_key));
+            double cal = 0;
+
 
             try {
                 URL url = new URL(builder.toString());
@@ -81,21 +79,20 @@ public class IdSearch extends AppCompatActivity {
                 }
 
                 StringBuilder titleBuilder = new StringBuilder();
-                // changed HashSet to TreeSet so that the results are sorted.
-                TreeSet<String> taglist = new TreeSet<>();
 
                 JSONObject reader = new JSONObject(jsonData.toString());
-                JSONObject items = reader.getJSONObject("labelNutrients");
+                JSONArray nutrients = reader.getJSONArray("foodNutrients");
+                for(int i = 0; i < nutrients.length(); i++){
+                    JSONObject nutrient = nutrients.getJSONObject(i);
+                    JSONObject nutrientType = nutrient.getJSONObject("nutrient");
+                    String type = nutrientType.getString("name");
+                    String type2 = nutrientType.getString("unitName");
+                    titleBuilder.append(type + " --------- ");
 
-
-
-                titleBuilder.append(items);
-
-                titleBuilder.toString();
-
-
-
-                StringBuilder tagBuilder = new StringBuilder();
+                    cal = nutrient.getDouble("amount");
+                    titleBuilder.append(cal + " " + type2);
+                    titleBuilder.append("\n\n");
+                }
 
                 resultData.titleStr = titleBuilder.toString();
 
@@ -107,6 +104,8 @@ public class IdSearch extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
             return resultData;
         }
 
@@ -114,15 +113,10 @@ public class IdSearch extends AppCompatActivity {
         protected void onPostExecute(ResultData resultData) {
             TextView tv = findViewById(R.id.textView);
             tv.setText(resultData.titleStr);
-
-
-
-            dataDownload = null;
         }
     }
 
     private class ResultData {
         String titleStr = "";
-        String tagStr = "";
     }
 }
