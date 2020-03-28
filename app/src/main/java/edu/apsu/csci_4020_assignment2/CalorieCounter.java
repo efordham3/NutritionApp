@@ -67,6 +67,8 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
+        Button button2 = findViewById(R.id.button2);
+        button2.setOnClickListener(this);
         ListView lv = (ListView) findViewById(R.id.list_view);
         EditText et = (EditText) findViewById(R.id.edit_text);
         TextView tv = (TextView) findViewById(R.id.text_view);
@@ -77,14 +79,8 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
 
+
         String data = foodSearch.getData();
-
-        if (view.getId() == R.id.button2) {
-
-            Intent i=new Intent(getApplicationContext(),IdSearch.class);
-            startActivity(i);
-        }
-
         String[] dataArr = data.split("\\r?\\n");
         Log.i("Hey", "The dataArr contents are" + dataArr);
 
@@ -95,6 +91,13 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
                 android.R.layout.simple_list_item_1, arrayList);
 
         lv.setAdapter(adapter);
+
+        if (view.getId() == R.id.button2) {
+
+            Intent i=new Intent(getApplicationContext(),IdSearch.class);
+            startActivity(i);
+        }
+
     }
 
 }
