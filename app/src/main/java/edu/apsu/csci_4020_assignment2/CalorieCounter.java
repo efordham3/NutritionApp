@@ -45,8 +45,6 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
         Button searchButton = findViewById(R.id.search_button);
         ListView lv = findViewById(R.id.list_view);
 
-        Button button2 = findViewById(R.id.button2);
-        button2.setOnClickListener(this);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -67,8 +65,6 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        Button button2 = findViewById(R.id.button2);
-        button2.setOnClickListener(this);
         ListView lv = (ListView) findViewById(R.id.list_view);
         EditText et = (EditText) findViewById(R.id.edit_text);
         TextView tv = (TextView) findViewById(R.id.text_view);
@@ -77,15 +73,6 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-
-
-
-        if (view.getId() == R.id.button2) {
-
-            Intent i=new Intent(getApplicationContext(),IdSearch.class);
-            startActivity(i);
         }
 
     }
