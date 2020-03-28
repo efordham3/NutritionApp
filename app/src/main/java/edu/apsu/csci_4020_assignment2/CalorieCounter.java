@@ -80,17 +80,7 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
         }
 
 
-        String data = foodSearch.getData();
-        String[] dataArr = data.split("\\r?\\n");
-        Log.i("Hey", "The dataArr contents are" + dataArr);
 
-        arrayList.clear();
-        arrayList.addAll(Arrays.asList(dataArr));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, arrayList);
-
-        lv.setAdapter(adapter);
 
         if (view.getId() == R.id.button2) {
 
