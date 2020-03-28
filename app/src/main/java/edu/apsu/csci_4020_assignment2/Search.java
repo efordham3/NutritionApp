@@ -37,6 +37,7 @@ public class Search {
     }
 
     public String runIdSearch(String userText) {
+        data = null;
         setUrl("search");
         builder.appendQueryParameter("generalSearchInput", userText);
         setIdBuilder();
@@ -47,6 +48,7 @@ public class Search {
             e.printStackTrace();
         }
         return data;
+
     }
 
     public String runDetailsSearch(String id){
@@ -134,7 +136,8 @@ public class Search {
                 JSONObject food = foods.getJSONObject(i);
                 String id = Integer.toString((food.getInt("fdcId")));
                 String brand = food.getString("brandOwner");
-                res += id + "--" +  brand + "\n";
+                String des = food.getString("description");
+                res += id + "--" + des + "--" +   brand + "\n";
             }
         } catch (JSONException e) {
             e.printStackTrace();
