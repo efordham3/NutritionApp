@@ -132,7 +132,6 @@ public class Search {
             JSONArray foods = reader.getJSONArray("foods");
 
             for(int i = 0; i < foods.length(); i++){
-                Log.i("Hey", "The length of the JSON array is" + foods.length());
                 JSONObject food = foods.getJSONObject(i);
                 String id = Integer.toString((food.getInt("fdcId")));
                 String brand = food.getString("brandOwner");
