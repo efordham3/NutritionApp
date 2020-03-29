@@ -32,6 +32,7 @@ public class IdSearch extends AppCompatActivity {
     private Uri.Builder builder;
     private Context context;
     String id;
+    private StackExchangeDownload downloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,43 +45,49 @@ public class IdSearch extends AppCompatActivity {
             public void onClick(View v) {
                 EditText et = (EditText) findViewById(R.id.edit_text);
                 id = et.getText().toString();
-                dataDownload = new StackExchangeDownload();
-                dataDownload.execute();
+                downloader = new StackExchangeDownload();
+                downloader.execute();
             }
         });
     }
 
-    private StackExchangeDownload dataDownload;
+    public void URLCreator(String id) {
+        TextView st = (TextView) findViewById(R.id.textView3);
+
+        builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/" + id).buildUpon();
+        builder.appendQueryParameter("api_key", IdSearch.this.getResources().getString(R.string.api_key));
+    }
 
 
-    private class StackExchangeDownload extends AsyncTask<Void, Void, ResultData> {
+    private class StackExchangeDownload extends AsyncTask<Void, Void, DataFinder> {
         @Override
-        protected ResultData doInBackground(Void... voids) {
-            ResultData resultData = new ResultData();
+        protected DataFinder doInBackground(Void... voids) {
+            DataFinder resultData = new DataFinder();
             TextView st = (TextView) findViewById(R.id.textView3);
 
-            builder = Uri.parse("https://api.nal.usda.gov/fdc/v1/" + id).buildUpon();
-            builder.appendQueryParameter("api_key", IdSearch.this.getResources().getString(R.string.api_key));
+            URLCreator(id);
+
             double cal = 0;
 
 
             try {
                 URL url = new URL(builder.toString());
-                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
-                InputStream is = connection.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
+                HttpsURLConnection connectionCreation = (HttpsURLConnection) url.openConnection();
 
-                StringBuilder jsonData = new StringBuilder();
+                InputStream thing = connectionCreation.getInputStream();
+                InputStreamReader inputstream = new InputStreamReader(thing);
+                BufferedReader buffer = new BufferedReader(inputstream);
+
+                StringBuilder jsonParcer = new StringBuilder();
                 String line;
-                while ((line = br.readLine()) != null) {
-                    jsonData.append(line);
+                while ((line = buffer.readLine()) != null) {
+                    jsonParcer.append(line);
                 }
 
                 StringBuilder titleBuilder = new StringBuilder();
 
-                JSONObject reader = new JSONObject(jsonData.toString());
+                JSONObject reader = new JSONObject(jsonParcer.toString());
                 JSONArray nutrients = reader.getJSONArray("foodNutrients");
                 for(int i = 0; i < nutrients.length(); i++){
                     JSONObject nutrient = nutrients.getJSONObject(i);
@@ -96,7 +103,7 @@ public class IdSearch extends AppCompatActivity {
 
                 resultData.titleStr = titleBuilder.toString();
 
-                connection.disconnect();
+                connectionCreation.disconnect();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -110,13 +117,13 @@ public class IdSearch extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ResultData resultData) {
+        protected void onPostExecute(DataFinder resultData) {
             TextView tv = findViewById(R.id.textView);
             tv.setText(resultData.titleStr);
         }
     }
 
-    private class ResultData {
+    private class DataFinder {
         String titleStr = "";
     }
 }
