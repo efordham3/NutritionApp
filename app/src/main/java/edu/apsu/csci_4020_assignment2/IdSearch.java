@@ -32,7 +32,7 @@ public class IdSearch extends AppCompatActivity {
     private Uri.Builder builder;
     private Context context;
     String id;
-    private StackExchangeDownload downloader;
+    private FoodGroupDownload downloader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class IdSearch extends AppCompatActivity {
             public void onClick(View v) {
                 EditText et = (EditText) findViewById(R.id.edit_text);
                 id = et.getText().toString();
-                downloader = new StackExchangeDownload();
+                downloader = new FoodGroupDownload();
                 downloader.execute();
             }
         });
@@ -59,7 +59,7 @@ public class IdSearch extends AppCompatActivity {
     }
 
 
-    private class StackExchangeDownload extends AsyncTask<Void, Void, DataFinder> {
+    private class FoodGroupDownload extends AsyncTask<Void, Void, DataFinder> {
         @Override
         protected DataFinder doInBackground(Void... voids) {
             DataFinder resultData = new DataFinder();
@@ -98,7 +98,7 @@ public class IdSearch extends AppCompatActivity {
 
                     cal = nutrient.getDouble("amount");
                     titleBuilder.append(cal + " " + type2);
-                    titleBuilder.append("\n\n");
+                    titleBuilder.append("\n ------------------------------------------------------------------ \n");
                 }
 
                 resultData.titleStr = titleBuilder.toString();
@@ -120,6 +120,8 @@ public class IdSearch extends AppCompatActivity {
         protected void onPostExecute(DataFinder resultData) {
             TextView tv = findViewById(R.id.textView);
             tv.setText(resultData.titleStr);
+
+
         }
     }
 

@@ -34,7 +34,8 @@ public class BaseClass extends AppCompatActivity implements View.OnClickListener
 
         text1.setText("Welcome to our calorie counter app!");
         text2.setText("This app will allow you to calculate the amount of calories in a given set of food.  You can look for your food and add them to your calorie" +
-                " counter!  You can also view our nutritional counter for each food.  This will require that you know your food's respective ID.");
+                " counter!  Click on the first button to do this and to find the corresponding ID.  You can also view our nutritional counter for each food.  This will require that you know your food's respective ID." +
+                " from the calorie counter.");
 
 
 
