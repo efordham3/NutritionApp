@@ -40,6 +40,8 @@ public class Search {
         data = null;
         setUrl("search");
         builder.appendQueryParameter("generalSearchInput", userText);
+        builder.appendQueryParameter("requireAllWords", "false");
+        builder.appendQueryParameter("includeDataTypeList", "Branded");
         setIdBuilder();
         urlConnection();
         try {
@@ -75,6 +77,7 @@ public class Search {
             String result = null;
             try {
                 URL url = new URL(builder.toString());
+                Log.i("Hey", "The url is " + url);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 InputStream is = connection.getInputStream();
@@ -90,11 +93,9 @@ public class Search {
 
                 if( builder.toString().startsWith("https://api.nal.usda.gov/fdc/v1/search")){
                     result = searchJsonParse(jsonSearchData);
-                    Log.i("Hey", "The result data is" + result);
                 }
                 else{
                     result = detailsJsonParse(jsonSearchData);
-                    Log.i("Hey", "The result data is " + result);
                 }
 
                 br.close();
@@ -106,7 +107,6 @@ public class Search {
                 e.printStackTrace();
             }
             data = result;
-            Log.i("Hey", "The data file was saved as " + data);
             return null;
         }
     }

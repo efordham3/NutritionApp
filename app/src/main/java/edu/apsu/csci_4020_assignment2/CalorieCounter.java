@@ -70,6 +70,7 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
         EditText et = (EditText) findViewById(R.id.edit_text);
         TextView tv = (TextView) findViewById(R.id.text_view);
         foodSearch.runIdSearch(et.getText().toString());
+        Log.i("Hey", "The editText contents are " + et.getText().toString());
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
