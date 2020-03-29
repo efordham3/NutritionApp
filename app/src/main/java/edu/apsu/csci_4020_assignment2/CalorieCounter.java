@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -75,6 +76,23 @@ public class CalorieCounter extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
 
-    }
+        String data = foodSearch.getData();
 
+        if (data == null) {
+            Toast.makeText(this, "The search was unsuccessful, try another one", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String[] dataArr = data.split("\\r?\\n");
+        Log.i("Hey", "The dataArr contents are" + dataArr);
+
+        arrayList.clear();
+        arrayList.addAll(Arrays.asList(dataArr));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, arrayList);
+
+        lv.setAdapter(adapter);
+    }
 }
+
