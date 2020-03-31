@@ -1,3 +1,5 @@
+//Eliot Fordham
+//Jacob Bassel
 package edu.apsu.csci_4020_assignment2;
 
 import android.content.Context;
